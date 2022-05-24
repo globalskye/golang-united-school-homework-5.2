@@ -1,23 +1,33 @@
 package cache
 
-import "time"
+import (
+	
+	"time"
+)
 
 type Cache struct {
+	Key, Value string
+	Deadline   time.Time
 }
 
-func NewCache() Cache {
-	return Cache{}
+
+func NewCache(key string, value string, deadline time.Time) Cache {
+	return Cache{Key: key, Value: value, Deadline: deadline}
 }
 
-func (receiver) Get(key string) (string, bool) {
+func (c Cache) Get(key string) (string, bool) {
+	return "", false
+
+}
+func (c *Cache) Put(key, value string) {
+	NewCache(key, value, time.Now())
 
 }
 
-func (receiver) Put(key, value string) {
+func (c Cache) Keys() []string {
+	return nil
 }
 
-func (receiver) Keys() []string {
-}
-
-func (receiver) PutTill(key, value string, deadline time.Time) {
+func (c Cache) PutTill(key, value string, deadline time.Time) {
+	NewCache(key, value, deadline)
 }
