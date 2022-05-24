@@ -1,7 +1,6 @@
 package cache
 
 import (
-	
 	"time"
 )
 
@@ -9,7 +8,6 @@ type Cache struct {
 	Key, Value string
 	Deadline   time.Time
 }
-
 
 func NewCache(key string, value string, deadline time.Time) Cache {
 	return Cache{Key: key, Value: value, Deadline: deadline}
