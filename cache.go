@@ -22,6 +22,7 @@ func NewCache() Cache {
 	return Cache{
 		data: map[string]Data{},
 	}
+
 }
 
 func (c *Cache) Get(key string) (string, bool) {
