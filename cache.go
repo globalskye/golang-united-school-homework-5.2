@@ -1,21 +1,18 @@
-package main
+package cache
 
 import (
+	"sync"
 	"time"
 )
 
 type Cache struct {
+	mu   sync.Mutex
 	data map[string]Data
 }
 
 type Data struct {
 	value    string
 	deadline time.Time
-}
-
-func main() {
-	c := NewCache()
-	c.Put("Ключ", "Значение")
 }
 
 func NewCache() Cache {
@@ -26,32 +23,50 @@ func NewCache() Cache {
 }
 
 func (c *Cache) Get(key string) (string, bool) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	for key1, value1 := range c.data {
 		if key == key1 {
+
 			if value1.deadline.After(time.Now()) {
-				return key1, true
+				return value1.value, true
 			} else {
-				return key1, false
+				return value1.value, false
 			}
 		}
 	}
-	return "", false
+	return "", true
 }
+
 func (c *Cache) Put(key, value string) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
 	c.data[key] = Data{
 		value:    value,
-		deadline: time.Now().Add(time.Minute),
+		deadline: time.Now().Add(time.Hour * 10),
 	}
+
 }
 
 func (c *Cache) Keys() []string {
-	keys := []string{}
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	keys := make([]string, 0, len(c.data))
 	for key := range c.data {
-		keys = append(keys, key)
+		if c.data[key].deadline.After(time.Now()) {
+			keys = append(keys, key)
+		}
+
 	}
 	return keys
 }
 
 func (c *Cache) PutTill(key, value string, deadline time.Time) {
-	c.data[key] = Data{value, deadline}
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.data[key] = Data{
+		value:    value,
+		deadline: deadline,
+	}
 }
