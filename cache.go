@@ -35,7 +35,7 @@ func (c *Cache) Get(key string) (string, bool) {
 			}
 		}
 	}
-	return "", true
+	return "", false
 }
 
 func (c *Cache) Put(key, value string) {
