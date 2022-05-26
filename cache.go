@@ -31,7 +31,7 @@ func (c *Cache) Get(key string) (string, bool) {
 			if value1.deadline.After(time.Now()) {
 				return value1.value, true
 			} else {
-				return value1.value, false
+				delete(c.data, key1)
 			}
 		}
 	}
