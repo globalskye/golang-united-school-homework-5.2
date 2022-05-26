@@ -42,7 +42,11 @@ func (c *Cache) Get(key string) (string, bool) {
 func (c *Cache) Put(key, value string) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-
+	for key1, _ := range c.data {
+		if key1 == key {
+			key1 = key
+		}
+	}
 	c.data[key] = Data{
 		value:    value,
 		deadline: time.Now().Add(time.Hour * 10),
